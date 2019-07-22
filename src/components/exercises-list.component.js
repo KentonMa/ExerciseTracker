@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios';
 
 const Exercise = props => (
@@ -9,7 +10,8 @@ const Exercise = props => (
         <td>{props.exercise.duration}</td>
         <td>{props.exercise.date.substring(0,10)}</td>
         <td>
-        <Link to={"/edit/" + props.exercise._id}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}>delete</a>
+        <Link className="btn btn-secondary mr-2" to={"/edit/" + props.exercise._id}><FontAwesomeIcon icon="pencil-alt" /></Link>
+        <button className="btn btn-danger" onClick={() => { props.deleteExercise(props.exercise._id) }}><FontAwesomeIcon icon="trash-alt" /></button>
         </td>
     </tr>
 )
@@ -53,20 +55,22 @@ export default class ExercisesList extends Component {
         return (
             <div>
                 <h3>Logged Exercises</h3>
-                <table className="table">
-                    <thead className="thead-light">
-                    <tr>
-                        <th>Username</th>
-                        <th>Description</th>
-                        <th>Duration</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { this.exerciseList() }
-                    </tbody>
-                </table>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-hover">
+                        <thead className="thead-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Description</th>
+                            <th>Duration (min)</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { this.exerciseList() }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }

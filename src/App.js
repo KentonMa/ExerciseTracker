@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -8,6 +10,8 @@ import ExerciseList from './components/exercises-list.component'
 import EditExercise from './components/edit-exercise.component';
 import CreateExercise from './components/create-exercise.component';
 import CreateUser from './components/create-user.component';
+
+library.add(faPencilAlt, faTrashAlt);
 
 function App() {
   return (
