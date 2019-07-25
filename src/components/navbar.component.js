@@ -1,27 +1,50 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    NavLink } from 'reactstrap';
 
-export default class Navbar extends Component {
+export default class SiteNavbar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.toggle = this.toggle.bind(this);
+        this.state = {
+            isOpen: false
+        };
+    }
+
+    toggle() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    }
+
     render() {
         return (
-            <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
-                <div className="container">
-                    <Link to="/" className="navbar-brand">ExerciseTracker</Link>
-                    <div className="collapse navbar-collapse">
-                        <ul className="navbar-nav ml-auto">
-                            <li className="navbar-item">
-                            <Link to="/" className="nav-link">Exercises</Link>
-                            </li>
-                            <li className="navbar-item">
-                            <Link to="/create" className="nav-link">Create Exercise</Link>
-                            </li>
-                            <li className="navbar-item">
-                            <Link to="/user" className="nav-link">Create User</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <div>
+                <Navbar color="dark" dark expand="lg">
+                    <NavbarBrand href="/">ExerciseTracker</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink href="/">Exercises</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/create">Create Exercise</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/user">Create User</NavLink>
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Navbar>
+            </div>
         );
     }
 }

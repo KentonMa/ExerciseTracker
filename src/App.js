@@ -5,7 +5,7 @@ import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Navbar from './components/navbar.component'
+import SiteNavbar from './components/navbar.component'
 import ExerciseList from './components/exercises-list.component'
 import EditExercise from './components/edit-exercise.component';
 import CreateExercise from './components/create-exercise.component';
@@ -16,7 +16,7 @@ library.add(faPencilAlt, faTrashAlt);
 function App() {
   return (
     <Router>
-      <Navbar />
+      <SiteNavbar />
       <br />
       <div className="container">
         <Route path="/" exact component={ExerciseList} />
