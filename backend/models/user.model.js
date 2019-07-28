@@ -8,7 +8,12 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         trim: true,
+        lowercase: true,
         minlength: 3
+    },
+    password: {
+        type: String,
+        required: true
     },
 }, {
     timestamps: true,
