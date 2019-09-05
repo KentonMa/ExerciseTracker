@@ -2,26 +2,23 @@ const router = require('express').Router();
 const auth = require('../middleware/auth');
 
 const Log = require('../models/log.model');
-const LogExercise = require('../models/logExercise.model');
+
+// All actions for this resource must be authenticated
+router.use(auth);
 
 router.route('/')
-    // Get list of logs and their associated exercises
-    .get(auth, (req, res) => {
+    // Get list of exercise logs
+    // TODO retrieve only the authenticated user's logs
+    .get((req, res) => {
         Log.find()
             .then(logs => res.json(logs))
             .catch(err => res.status(400).json(err));
     })
     // Create an exercise log
-    .post(auth, (req, res) => {
-        // Create a log
+    .post((req, res) => {
         const description = req.body.description;
         const date = Date.parse(req.body.date);
         const user_id = req.user.id;
-        const exercises = req.body.exercises;
-
-        if (exercises.length === 0) {
-            return res.status(400).json({ msg: 'Please add one or more exercises.' });
-        }
 
         const newLog = new Log({
             description,
@@ -31,69 +28,39 @@ router.route('/')
 
         newLog.save()
             .then(log => {
-                // Create each exercise for this log
-                // TODO find better way to handle errors
-                const log_id = log.id;
-                const savedExercises = [];
-
-                exercises.forEach(async (exercise) => {
-                    const { exercise_id, sets} = exercise;
-
-                    const newLogExercise = new LogExercise({
-                        log_id,
-                        exercise_id,
-                        user_id,
-                        sets
-                    });
-
-                    try {
-                        let response = await newLogExercise.save();
-                        savedExercises.push(response.id);
-                    } catch (err) {
-                        // Clean up
-                        savedExercises.forEach(exercise_id => {
-                            LogExercise.findByIdAndDelete(exercise_id)
-                                .catch(err => res.status(400).json(err));
-                        });
-                        return res.status(400).json(err);
-                    }
-                });
-
-                res.json('Exercise log added.');
+                res.json(log);
             })
             .catch(err => res.status(400).json(err));
     });
 
 router.route('/:id')
-    // Get a particular exercise log
+    // Get a specified exercise log
+    // TODO retrieve only the authenticated user's logs
     .get((req, res) => {
-        // TODO
-        // Exercise.findById(req.params.id)
-        //     .then(exercise => res.json(exercise))
-        //     .catch(err => res.status(400).json(err));
+        Log.findById(req.params.id)
+            .then(log => res.json(log))
+            .catch(err => res.status(400).json(err));
     })
     // Delete a particular exercise log
+    // TODO delete only the authenticated user's logs
     .delete((req, res) => {
-        // TODO
-        // Exercise.findByIdAndDelete(req.params.id)
-        //     .then(() => res.json('Exercise deleted.'))
-        //     .catch(err => res.status(400).json(err));
+        Log.findByIdAndDelete(req.params.id)
+            .then(() => res.json({ msg: 'Exercise log deleted.' }))
+            .catch(err => res.status(400).json(err));
     })
     // Update a particular exercise log
+    // TODO update only the authenticated user's logs
     .put((req, res) => {
-        // TODO
-        // Exercise.findById(req.params.id)
-        //     .then(exercise => {
-        //         exercise.username = req.body.username;
-        //         exercise.description = req.body.description;
-        //         exercise.duration = Number(req.body.duration);
-        //         exercise.date = Date.parse(req.body.date);
+        Log.findById(req.params.id)
+            .then(log => {
+                log.description = req.body.description || log.description;
+                log.date = Date.parse(req.body.date) || log.date;
 
-        //         exercise.save()
-        //             .then(() => res.json('Exercise updated.'))
-        //             .catch(err => res.status(400).json(err));
-        //     })
-        //     .catch(err => res.status(400).json(err));
+                log.save()
+                    .then(log => res.json(log))
+                    .catch(err => res.status(400).json(err));
+            })
+            .catch(err => res.status(400).json(err));
     });
 
 module.exports = router;
