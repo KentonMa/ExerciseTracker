@@ -3,11 +3,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const logSchema = new Schema({
-    user_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+    user_id: { type: Schema.Types.ObjectId, required: true },
+    description: { type: String },
     date: { type: Date, required: true },
 }, {
     timestamps: true,
