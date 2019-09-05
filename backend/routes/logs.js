@@ -17,6 +17,11 @@ router.route('/')
         const description = req.body.description;
         const date = Date.parse(req.body.date);
         const user_id = req.user.id;
+        const exercises = req.body.exercises;
+
+        if (exercises.length === 0) {
+            return res.status(400).json({ msg: 'Please add one or more exercises.' });
+        }
 
         const newLog = new Log({
             description,
@@ -24,29 +29,39 @@ router.route('/')
             user_id
         });
 
-        let log_id;
         newLog.save()
-            .then(log => log_id = log.id)
+            .then(log => {
+                // Create each exercise for this log
+                // TODO find better way to handle errors
+                const log_id = log.id;
+                const savedExercises = [];
+
+                exercises.forEach(async (exercise) => {
+                    const { exercise_id, sets} = exercise;
+
+                    const newLogExercise = new LogExercise({
+                        log_id,
+                        exercise_id,
+                        user_id,
+                        sets
+                    });
+
+                    try {
+                        let response = await newLogExercise.save();
+                        savedExercises.push(response.id);
+                    } catch (err) {
+                        // Clean up
+                        savedExercises.forEach(exercise_id => {
+                            LogExercise.findByIdAndDelete(exercise_id)
+                                .catch(err => res.status(400).json(err));
+                        });
+                        return res.status(400).json(err);
+                    }
+                });
+
+                res.json('Exercise log added.');
+            })
             .catch(err => res.status(400).json(err));
-
-        // Create each log exercise
-        const exercises = req.body.exercises;
-        
-        exercises.forEach(exercise => {
-            const { exercise_id, sets} = exercise;
-
-            const newLogExercise = new LogExercise({
-                log_id,
-                exercise_id,
-                user_id,
-                sets
-            });
-
-            newLogExercise.save()
-                .catch(err => res.status(400).json(err));
-        });
-
-        res.json('Exercise log added.');
     });
 
 router.route('/:id')
