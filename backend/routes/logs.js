@@ -8,9 +8,8 @@ router.use(auth);
 
 router.route('/')
     // Get list of exercise logs
-    // TODO retrieve only the authenticated user's logs
     .get((req, res) => {
-        Log.find()
+        Log.find({ user_id: req.user.id })
             .then(logs => res.json(logs))
             .catch(err => res.status(400).json(err));
     })
@@ -28,37 +27,56 @@ router.route('/')
 
         newLog.save()
             .then(log => {
-                res.json(log);
+                res.status(201).json(log);
             })
             .catch(err => res.status(400).json(err));
     });
 
 router.route('/:id')
     // Get a specified exercise log
-    // TODO retrieve only the authenticated user's logs
     .get((req, res) => {
         Log.findById(req.params.id)
-            .then(log => res.json(log))
+            .then(log => {
+                if (log.user_id.toString() !== req.user.id) {
+                    res.status(403).json({ msg: 'Forbidden access to resource.' });
+                } else {
+                    res.json(log);
+                }
+            })
             .catch(err => res.status(400).json(err));
     })
     // Delete a particular exercise log
-    // TODO delete only the authenticated user's logs
     .delete((req, res) => {
-        Log.findByIdAndDelete(req.params.id)
-            .then(() => res.json({ msg: 'Exercise log deleted.' }))
+        Log.findById(req.params.id)
+            .then(log => {
+                if (log.user_id.toString() !== req.user.id) {
+                    res.status(403).json({ msg: 'Forbidden access to resource.' });
+                } else {
+                    Log.findOneAndDelete({ _id: log.id }, (err, log) => {
+                        if (err) {
+                            res.status(400).json(err);
+                        } else {
+                            res.json({ msg: 'Exercise log deleted.' });
+                        }
+                    })
+                }
+            })
             .catch(err => res.status(400).json(err));
     })
     // Update a particular exercise log
-    // TODO update only the authenticated user's logs
     .put((req, res) => {
         Log.findById(req.params.id)
             .then(log => {
-                log.description = req.body.description || log.description;
-                log.date = Date.parse(req.body.date) || log.date;
-
-                log.save()
-                    .then(log => res.json(log))
-                    .catch(err => res.status(400).json(err));
+                if (log.user_id.toString() !== req.user.id) {
+                    res.status(403).json({ msg: 'Forbidden access to resource.' });
+                } else {
+                    log.description = req.body.description || log.description;
+                    log.date = Date.parse(req.body.date) || log.date;
+    
+                    log.save()
+                        .then(log => res.json(log))
+                        .catch(err => res.status(400).json(err));
+                }
             })
             .catch(err => res.status(400).json(err));
     });
