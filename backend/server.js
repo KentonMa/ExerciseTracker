@@ -18,10 +18,12 @@ connection.once('open', () => {
 });
 
 const logsRouter = require('./routes/logs');
+const logExercisesRouter = require('./routes/log-exercises');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
 app.use('/logs', logsRouter);
+app.use('/log-exercises', logExercisesRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 
