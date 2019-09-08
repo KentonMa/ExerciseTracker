@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+#login {
+  height: 100vh;
+  background-image: url('./img/homebg.jpg');
+}
+
+.form-wrapper {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-wrapper input {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+}
+
+.form-wrapper input:focus {
+  background-color: rgba(0, 0, 0, 0.5);
+}
