@@ -12,6 +12,7 @@ code {
     monospace;
 }
 
+/* Login */
 #login {
   height: 100vh;
   background-image: url('./img/homebg.jpg');
@@ -29,4 +30,21 @@ code {
 
 .form-wrapper input:focus {
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Logs */
+.log-date {
+  margin-bottom: 0;
+  font-style: italic;
+  color: gray;
+}
+
+.log-edit-btn {
+  right: 70px;
+  top: 30%;
+}
+
+.log-delete-btn {
+  right: 20px;
+  top: 30%;
 }
