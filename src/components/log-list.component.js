@@ -38,7 +38,7 @@ class LogList extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container has-fixed-nav">
                 <div className="mt-3 mb-2 clearfix">
                     <h3 className="float-left">Logs</h3>
                     <AddLog className="float-right" />

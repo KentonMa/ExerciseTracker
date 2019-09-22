@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     Collapse,
     Navbar,
@@ -7,8 +8,9 @@ import {
     Nav,
     NavItem,
     NavLink } from 'reactstrap';
+import { logout } from '../actions/authActions';
 
-export default class SiteNavbar extends Component {
+class SiteNavbar extends Component {
     constructor(props) {
         super(props);
 
@@ -25,22 +27,33 @@ export default class SiteNavbar extends Component {
     }
 
     render() {
+        const authLinks = (
+            <>
+            <NavItem>
+                <NavLink href="/logs">Logs</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="#" onClick={this.props.logout}>Logout</NavLink>
+            </NavItem>
+            </>
+        );
+
+        const guestLinks = (
+            <>
+            <NavItem>
+                <NavLink href="#">Register</NavLink>
+            </NavItem>
+            </>
+        );
+
         return (
             <div>
-                <Navbar color="dark" dark expand="lg">
+                <Navbar color="dark" dark expand="lg" fixed="top">
                     <NavbarBrand href="/">ExerciseTracker</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <NavLink href="/">Exercises</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="/create">Create Exercise</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="/user">Create User</NavLink>
-                            </NavItem>
+                            {this.props.isAuthenticated ? authLinks : guestLinks}
                         </Nav>
                     </Collapse>
                 </Navbar>
@@ -48,3 +61,12 @@ export default class SiteNavbar extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(
+    mapStateToProps,
+    { logout }
+)(SiteNavbar);

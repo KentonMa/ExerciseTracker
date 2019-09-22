@@ -4,7 +4,8 @@ import {
     USER_LOADING,
     AUTH_ERROR,
     LOGIN_SUCCESS,
-    LOGIN_FAIL
+    LOGIN_FAIL,
+    LOGOUT_SUCCESS
 } from './types';
 import { returnErrors } from './errorActions';
 
@@ -17,12 +18,43 @@ export const loadUser = () => (dispatch, getState) => {
             payload: res.data
         }))
         .catch(err => {
-            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch(returnErrors(err.response.data.msg, err.response.status, AUTH_ERROR));
             dispatch({
                 type: AUTH_ERROR
             });
         })
 }
+
+export const login = ({ username, password }, history) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify({ username, password });
+
+    axios.post('http://localhost:5000/auth', body, config)
+        .then(res => {
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: res.data
+            })
+            history.push('/logs');
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data.msg, err.response.status, LOGIN_FAIL));
+            dispatch({
+                type: LOGIN_FAIL
+            })
+        })
+}
+
+export const logout = () => {
+    return {
+        type: LOGOUT_SUCCESS
+    };
+};
 
 export const tokenConfig = getState => {
     const token = getState().auth.token;

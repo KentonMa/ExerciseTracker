@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.has-fixed-nav {
+  margin-top: 70px;
+}
+
 /* Login */
 #login {
   height: 100vh;
@@ -30,6 +34,7 @@ code {
 
 .form-wrapper input:focus {
   background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
 }
 
 /* Logs */
