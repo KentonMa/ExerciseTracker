@@ -8,6 +8,7 @@ import {
     Nav,
     NavItem,
     NavLink } from 'reactstrap';
+import Register from './register.component';
 import { logout } from '../actions/authActions';
 
 class SiteNavbar extends Component {
@@ -39,11 +40,7 @@ class SiteNavbar extends Component {
         );
 
         const guestLinks = (
-            <>
-            <NavItem>
-                <NavLink href="#">Register</NavLink>
-            </NavItem>
-            </>
+            <Register />
         );
 
         return (

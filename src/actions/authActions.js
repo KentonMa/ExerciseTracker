@@ -5,7 +5,9 @@ import {
     AUTH_ERROR,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
-    LOGOUT_SUCCESS
+    LOGOUT_SUCCESS,
+    REGISTER_SUCCESS,
+    REGISTER_FAIL
 } from './types';
 import { returnErrors } from './errorActions';
 
@@ -39,14 +41,14 @@ export const login = ({ username, password }, history) => (dispatch) => {
             dispatch({
                 type: LOGIN_SUCCESS,
                 payload: res.data
-            })
+            });
             history.push('/logs');
         })
         .catch(err => {
             dispatch(returnErrors(err.response.data.msg, err.response.status, LOGIN_FAIL));
             dispatch({
                 type: LOGIN_FAIL
-            })
+            });
         })
 }
 
@@ -55,6 +57,31 @@ export const logout = () => {
         type: LOGOUT_SUCCESS
     };
 };
+
+export const register = ({ username, password }, history) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify({ username, password });
+
+    axios.post('http://localhost:5000/users', body, config)
+        .then(res => {
+            dispatch({
+                type: REGISTER_SUCCESS,
+                payload: res.data
+            });
+            history.push('/logs');
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response.data.msg, err.response.status, REGISTER_FAIL));
+            dispatch({
+                type: REGISTER_FAIL
+            });
+        })
+}
 
 export const tokenConfig = getState => {
     const token = getState().auth.token;
