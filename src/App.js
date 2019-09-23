@@ -14,7 +14,6 @@ import LogList from './components/log-list.component';
 import ExerciseList from './components/exercises-list.component';
 import EditExercise from './components/edit-exercise.component';
 import CreateExercise from './components/create-exercise.component';
-import CreateUser from './components/create-user.component';
 
 library.add(faPencilAlt, faTrashAlt, faPlus);
 
@@ -33,7 +32,6 @@ class App extends Component {
             <Route path="/logs" component={LogList} />
             <Route path="/edit/:id" component={EditExercise} />
             <Route path="/create" component={CreateExercise} />
-            <Route path="/user" component={CreateUser} />
           </div>
         </Router>
       </Provider>
