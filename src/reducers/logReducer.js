@@ -16,14 +16,16 @@ export default function(state = initialState, action) {
         case ADD_LOG:
             return {
                 ...state,
-                logs: [action.payload, ...state]
+                logs: [action.payload, ...state.logs]
             };
         case UPDATE_LOG:
-            return state.map(log => 
-                log._id === action.id ?
-                { ...log, description: action.payload.description, date: action.payload.date } :
-                log
-            )
+            return {
+                ...state,
+                logs: state.logs.map(log => 
+                    log._id === action.id ?
+                    { ...log, description: action.payload.description, date: action.payload.date } :
+                    log)
+            };
         case DELETE_LOG:
             return {
                 ...state,

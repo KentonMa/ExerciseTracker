@@ -53,7 +53,11 @@ class EditLog extends Component {
         const log = {
             description, date
         };
+
         this.props.updateLog(log, this.props.log._id);
+
+        // Close modal
+        this.toggle();
     }
 
     render() {

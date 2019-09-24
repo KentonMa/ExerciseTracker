@@ -32,7 +32,9 @@ class AddLog extends Component {
 
     toggle() {
         this.setState(prevState => ({
-            modal: !prevState.modal
+            modal: !prevState.modal,
+            date: new Date(),
+            description: ''
         }));
     }
 
@@ -53,7 +55,11 @@ class AddLog extends Component {
         const log = {
             description, date
         };
+
         this.props.addLog(log);
+
+        // Close modal
+        this.toggle();
     }
 
     render() {

@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 
 const Log = props => (
     <ListGroupItem>
-        <p>{ props.log.description }</p>
-        <p className="log-date">{ props.log.date }</p>
+        <a href={`/logs/${props.log._id}`}>{ props.log.description }</a>
+        <p className="log-date">{ props.log.date.substring(0, 10) }</p>
         <EditLog
             className="position-absolute my-auto log-edit-btn"
             log={props.log} />
