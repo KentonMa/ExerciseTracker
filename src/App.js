@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import ProtectedRoute from './protected.route';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPencilAlt, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -29,7 +30,7 @@ class App extends Component {
           <SiteNavbar />
           <div>
             <Route path="/" exact component={Login} />
-            <Route path="/logs" component={LogList} />
+            <ProtectedRoute path="/logs" component={LogList} />
             <Route path="/edit/:id" component={EditExercise} />
             <Route path="/create" component={CreateExercise} />
           </div>
