@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
-import { loadUser } from './actions/authActions';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import ProtectedRoute from './protected.route';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPencilAlt, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -15,25 +13,22 @@ import LogList from './components/log-list.component';
 import ExerciseList from './components/exercises-list.component';
 import EditExercise from './components/edit-exercise.component';
 import CreateExercise from './components/create-exercise.component';
+import ProtectedRoute from './components/ProtectedRoute';
 
 library.add(faPencilAlt, faTrashAlt, faPlus);
 
 class App extends Component {
-  componentDidMount() {
-    store.dispatch(loadUser());
-  }
-
   render() {
     return (
       <Provider store={store}>
         <Router>
           <SiteNavbar />
-          <div>
+          <Switch>
             <Route path="/" exact component={Login} />
-            <ProtectedRoute path="/logs" component={LogList} />
+            <ProtectedRoute path="/logs" exact component={LogList} />
             <Route path="/edit/:id" component={EditExercise} />
             <Route path="/create" component={CreateExercise} />
-          </div>
+          </Switch>
         </Router>
       </Provider>
     );

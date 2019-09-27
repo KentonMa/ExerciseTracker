@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
     Collapse,
     Navbar,
     NavbarToggler,
-    NavbarBrand,
     Nav,
     NavItem,
     NavLink } from 'reactstrap';
@@ -31,7 +31,7 @@ class SiteNavbar extends Component {
         const authLinks = (
             <>
             <NavItem>
-                <NavLink href="/logs">Logs</NavLink>
+                <Link className="nav-link" to="/logs">Logs</Link>
             </NavItem>
             <NavItem>
                 <NavLink href="#" onClick={this.props.logout}>Logout</NavLink>
@@ -46,7 +46,7 @@ class SiteNavbar extends Component {
         return (
             <div>
                 <Navbar color="dark" dark expand="lg" fixed="top">
-                    <NavbarBrand href="/">ExerciseTracker</NavbarBrand>
+                    <Link className="navbar-brand" to="/">ExerciseTracker</Link>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
