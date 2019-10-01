@@ -8,10 +8,6 @@ import { tokenConfig } from './actions/authActions';
 import { returnErrors } from './actions/errorActions';
 import axios from 'axios';
 
-const render = () => {
-    ReactDOM.render(<App />, document.getElementById('root'));
-};
-
 store.dispatch({ type: USER_LOADING });
 
 axios.get('http://localhost:5000/auth/user', tokenConfig(store.getState))
@@ -20,12 +16,13 @@ axios.get('http://localhost:5000/auth/user', tokenConfig(store.getState))
             type: USER_LOADED,
             payload: res.data
         });
-        render();
     })
     .catch(err => {
         store.dispatch(returnErrors(err.response.data.msg, err.response.status, AUTH_ERROR));
         store.dispatch({
             type: AUTH_ERROR
         });
-        render();
+    })
+    .finally(() => {
+        ReactDOM.render(<App />, document.getElementById('root'));
     });

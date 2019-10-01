@@ -26,6 +26,7 @@ class App extends Component {
           <Switch>
             <Route path="/" exact component={Login} />
             <ProtectedRoute path="/logs" exact component={LogList} />
+            <ProtectedRoute path="/logs/:id" component={ExerciseList} />
             <Route path="/edit/:id" component={EditExercise} />
             <Route path="/create" component={CreateExercise} />
           </Switch>
