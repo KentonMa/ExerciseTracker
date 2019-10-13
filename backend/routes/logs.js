@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const auth = require('../middleware/auth');
 
+require('../models/exercise.model');
+
 const Log = require('../models/log.model');
+const LogExercise = require('../models/logExercise.model');
 
 // All actions for this resource must be authenticated
 router.use(auth);
@@ -78,6 +81,15 @@ router.route('/:id')
                         .catch(err => res.status(400).json(err));
                 }
             })
+            .catch(err => res.status(400).json(err));
+    });
+
+router.route('/:id/log-exercises')
+    // Get log exercises of a specified log
+    .get((req, res) => {
+        LogExercise.find({ log_id: req.params.id, user_id: req.user.id })
+            .populate('exercise')
+            .then(exercises => res.json(exercises))
             .catch(err => res.status(400).json(err));
     });
 

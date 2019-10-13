@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const logExerciseSchema = new Schema({
     log_id: { type: Schema.Types.ObjectId, required: true },
     user_id: { type: Schema.Types.ObjectId, required: true },
-    exercise_id: {
+    exercise: {
         type: Schema.Types.ObjectId,
         ref: 'Exercise',
         required: true
