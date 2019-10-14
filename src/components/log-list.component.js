@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,7 +10,7 @@ import PropTypes from 'prop-types';
 
 const Log = props => (
     <ListGroupItem>
-        <a href={`/logs/${props.log._id}`}>{ props.log.description }</a>
+        <Link to={`/logs/${props.log._id}`}>{ props.log.description }</Link>
         <p className="log-date">{ props.log.date.substring(0, 10) }</p>
         <EditLog
             className="position-absolute my-auto log-edit-btn"

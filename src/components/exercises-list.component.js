@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
     Card,
     CardHeader,
@@ -6,125 +7,29 @@ import {
     CardText,
     Row,
     Col } from 'reactstrap';
+import { getLogExercises } from '../actions/logExerciseActions';
 
 const Exercise = props => (
     <Col className="mb-2" md="6">
         <Card>
-            <CardHeader>{props.exercise.exercise}</CardHeader>
+            <CardHeader>{props.exercise.exercise.name}</CardHeader>
             <CardBody>
                 {props.exercise.sets.map(set => {
-                    return <CardText>{set.weight} lb x {set.reps} reps</CardText>
+                    return <CardText key={set._id}>{set.weight} lb x {set.reps} reps</CardText>
                 })}
             </CardBody>
         </Card>
     </Col>
 )
 
-export default class ExercisesList extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            exercises: [
-                {
-                    "_id": "5d707786d39fde253018140f",
-                    "exercise": "Bench Press",
-                    "sets": [
-                        {
-                            "_id": "5d707786d39fde2530181414",
-                            "reps": 5,
-                            "weight": 135
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181413",
-                            "reps": 5,
-                            "weight": 135
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181412",
-                            "reps": 5,
-                            "weight": 135
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181411",
-                            "reps": 5,
-                            "weight": 135
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181410",
-                            "reps": 5,
-                            "weight": 135
-                        }
-                    ]
-                },
-                {
-                    "_id": "5d707786d39fde253018140g",
-                    "exercise": "Leg Press",
-                    "sets": [
-                        {
-                            "_id": "5d707786d39fde253018141a",
-                            "reps": 5,
-                            "weight": 155
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181419",
-                            "reps": 5,
-                            "weight": 155
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181418",
-                            "reps": 5,
-                            "weight": 155
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181417",
-                            "reps": 5,
-                            "weight": 155
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181416",
-                            "reps": 5,
-                            "weight": 155
-                        }
-                    ]
-                },
-                {
-                    "_id": "5d707786d39fde253018140g",
-                    "exercise": "Overhead Press",
-                    "sets": [
-                        {
-                            "_id": "5d707786d39fde253018141a",
-                            "reps": 5,
-                            "weight": 85
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181419",
-                            "reps": 5,
-                            "weight": 85
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181418",
-                            "reps": 5,
-                            "weight": 85
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181417",
-                            "reps": 5,
-                            "weight": 85
-                        },
-                        {
-                            "_id": "5d707786d39fde2530181416",
-                            "reps": 5,
-                            "weight": 85
-                        }
-                    ]
-                }
-            ]
-        }
+class ExercisesList extends Component {
+    componentDidMount() {
+        this.props.getLogExercises(this.props.match.params.id);
     }
 
     exerciseList() {
-        return this.state.exercises.map(exercise => {
+        const { logExercises } = this.props.logExercise;
+        return logExercises.map(exercise => {
             return <Exercise exercise={exercise} key={exercise._id} />;
         })
     }
@@ -142,3 +47,12 @@ export default class ExercisesList extends Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    logExercise: state.logExercise
+});
+
+export default connect(
+    mapStateToProps,
+    { getLogExercises }
+)(ExercisesList);
