@@ -7,6 +7,7 @@ import {
     CardText,
     Row,
     Col } from 'reactstrap';
+import AddLogExercise from './add-logExercise.component';
 import { getLogExercises } from '../actions/logExerciseActions';
 
 const Exercise = props => (
@@ -39,6 +40,7 @@ class ExercisesList extends Component {
             <div className="container has-fixed-nav">
                 <div className="mt-3 mb-2 clearfix">
                     <h3 className="float-left">Logged Exercises</h3>
+                    <AddLogExercise className="float-right" />
                 </div>
                 <Row>
                 { this.exerciseList() }
