@@ -10,6 +10,7 @@ import {
     FormGroup,
     Label,
     Input } from 'reactstrap';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { addLogExercise } from '../actions/logExerciseActions';
 
@@ -17,11 +18,22 @@ class AddLogExercise extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false
+            modal: false,
+            exercises: []
         };
 
         this.toggle = this.toggle.bind(this);
         this.onCreate = this.onCreate.bind(this);
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:5000/exercises')
+            .then(res => {
+                this.setState({
+                    exercises: res.data
+                });
+            })
+            .catch(err => console.log(err));
     }
 
     toggle() {
@@ -40,7 +52,6 @@ class AddLogExercise extends Component {
     }
 
     // TODO dynamically add sets
-    // TODO get list of exercises and let users select
     render() {
         return (
             <div className={this.props.className}>
@@ -49,6 +60,17 @@ class AddLogExercise extends Component {
                     <ModalHeader toggle={this.toggle}>Create Exercise</ModalHeader>
                     <ModalBody>
                         <Form>
+                        <FormGroup>
+                            <Label for="exerciseSelect">Exercise</Label>
+                                <Input type="select" name="exerciseSelect" id="exerciseSelect">
+                                {
+                                    this.state.exercises.map(exercise => {
+                                        const { _id, name } = exercise;
+                                        return <option key={_id} value={_id}>{name}</option>;
+                                    })
+                                }
+                                </Input>
+                        </FormGroup>
                         </Form>
                     </ModalBody>
                     <ModalFooter>
