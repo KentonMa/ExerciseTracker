@@ -9,7 +9,8 @@ import {
     Form,
     FormGroup,
     Label,
-    Input } from 'reactstrap';
+    Input,
+    Col } from 'reactstrap';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { addLogExercise } from '../actions/logExerciseActions';
@@ -19,18 +20,30 @@ class AddLogExercise extends Component {
         super(props);
         this.state = {
             modal: false,
-            exercises: []
+            exercises: [],
+            exercise: '',
+            sets: [
+                {
+                    reps: 0,
+                    weight: 0
+                }
+            ]
         };
 
         this.toggle = this.toggle.bind(this);
         this.onCreate = this.onCreate.bind(this);
+        this.onAddSet = this.onAddSet.bind(this);
+        this.onChangeReps = this.onChangeReps.bind(this);
+        this.onChangeWeight = this.onChangeWeight.bind(this);
+        this.onChangeExercise = this.onChangeExercise.bind(this);
     }
 
     componentDidMount() {
         axios.get('http://localhost:5000/exercises')
             .then(res => {
                 this.setState({
-                    exercises: res.data
+                    exercises: res.data,
+                    exercise: res.data[0]._id
                 });
             })
             .catch(err => console.log(err));
@@ -42,16 +55,82 @@ class AddLogExercise extends Component {
         }));
     }
 
+    // TODO link form data to state
     onCreate() {
         const exercise = {}; // TODO
-
+        const log_id = this.props.match.params.id;
+        
+        exercise.log_id = log_id;
+        // exercise.user_id = 
+        exercise.exercise = this.state.exercise;
+        exercise.sets = this.state.sets;
+        // log_id: { type: ObjectId },
+        // user_id: { type: ObjectId },
+        // exercise: { type: ObjectId },
+        // sets: [{
+        //     reps: { type: Number },
+        //     weight: { type: Number }
+        // }]
         this.props.addLogExercise(exercise);
 
         // Close modal
         this.toggle();
     }
 
-    // TODO dynamically add sets
+    onAddSet() {
+        this.setState({
+            sets: [...this.state.sets, { reps: 0, weight: 0 }]
+        });
+    }
+
+    onChangeExercise(e) {
+        this.setState({
+            exercise: e.target.value
+        });
+    }
+
+    onChangeReps(index, e) {
+        const reps = parseInt(e.target.value);
+        this.setState({
+            sets: this.state.sets.map((set, i) => {
+                return (i === index) ? {...set, reps} : set;
+            })
+        });
+    }
+
+    onChangeWeight(index, e) {
+        const weight = parseInt(e.target.value);
+        this.setState({
+            sets: this.state.sets.map((set, i) => {
+                return (i === index) ? {...set, weight} : set;
+            })
+        });
+    }
+
+    setsList() {
+        return this.state.sets.map((set, index) => {
+            return (
+            <FormGroup key={index} row>
+            <Col>
+                <Input
+                    type="number"
+                    defaultValue={set.reps}
+                    onChange={e => this.onChangeReps(index, e)}
+                    placeholder="Reps" />
+            </Col>
+            <Col>
+                <Input
+                    type="number"
+                    defaultValue={set.weight}
+                    onChange={e => this.onChangeWeight(index, e)}
+                    placeholder="Weight (lb)" />
+            </Col>
+            </FormGroup>
+            );
+        })
+    }
+
+    // TODO delete set
     render() {
         return (
             <div className={this.props.className}>
@@ -62,7 +141,12 @@ class AddLogExercise extends Component {
                         <Form>
                         <FormGroup>
                             <Label for="exerciseSelect">Exercise</Label>
-                                <Input type="select" name="exerciseSelect" id="exerciseSelect">
+                                <Input
+                                    type="select"
+                                    name="exerciseSelect"
+                                    id="exerciseSelect"
+                                    value={this.state.exercise}
+                                    onChange={this.onChangeExercise}>
                                 {
                                     this.state.exercises.map(exercise => {
                                         const { _id, name } = exercise;
@@ -71,6 +155,8 @@ class AddLogExercise extends Component {
                                 }
                                 </Input>
                         </FormGroup>
+                        { this.setsList() }
+                        <Button color="success" onClick={this.onAddSet}><FontAwesomeIcon icon="plus" /> New set</Button>
                         </Form>
                     </ModalBody>
                     <ModalFooter>
