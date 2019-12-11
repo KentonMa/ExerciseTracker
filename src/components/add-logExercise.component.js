@@ -24,6 +24,7 @@ class AddLogExercise extends Component {
             exercise: '',
             sets: [
                 {
+                    key: new Date().getTime(),
                     reps: 0,
                     weight: 0
                 }
@@ -33,6 +34,7 @@ class AddLogExercise extends Component {
         this.toggle = this.toggle.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onAddSet = this.onAddSet.bind(this);
+        this.onDeleteSet = this.onDeleteSet.bind(this);
         this.onChangeReps = this.onChangeReps.bind(this);
         this.onChangeWeight = this.onChangeWeight.bind(this);
         this.onChangeExercise = this.onChangeExercise.bind(this);
@@ -79,7 +81,13 @@ class AddLogExercise extends Component {
 
     onAddSet() {
         this.setState({
-            sets: [...this.state.sets, { reps: 0, weight: 0 }]
+            sets: [...this.state.sets, { key: new Date().getTime(), reps: 0, weight: 0 }]
+        });
+    }
+
+    onDeleteSet(key) {
+        this.setState({
+            sets: this.state.sets.filter((set) => set.key !== key)
         });
     }
 
@@ -89,48 +97,48 @@ class AddLogExercise extends Component {
         });
     }
 
-    onChangeReps(index, e) {
+    onChangeReps(key, e) {
         const reps = parseInt(e.target.value);
         this.setState({
-            sets: this.state.sets.map((set, i) => {
-                return (i === index) ? {...set, reps} : set;
+            sets: this.state.sets.map(set => {
+                return (set.key === key) ? {...set, reps} : set;
             })
         });
     }
 
-    onChangeWeight(index, e) {
+    onChangeWeight(key, e) {
         const weight = parseInt(e.target.value);
         this.setState({
-            sets: this.state.sets.map((set, i) => {
-                return (i === index) ? {...set, weight} : set;
+            sets: this.state.sets.map(set => {
+                return (set.key === key) ? {...set, weight} : set;
             })
         });
     }
 
     setsList() {
-        return this.state.sets.map((set, index) => {
+        return this.state.sets.map((set) => {
             return (
-            <FormGroup key={index} row>
+            <FormGroup key={set.key} row>
             <Col>
                 <Input
                     type="number"
                     defaultValue={set.reps}
-                    onChange={e => this.onChangeReps(index, e)}
+                    onChange={e => this.onChangeReps(set.key, e)}
                     placeholder="Reps" />
             </Col>
             <Col>
                 <Input
                     type="number"
                     defaultValue={set.weight}
-                    onChange={e => this.onChangeWeight(index, e)}
+                    onChange={e => this.onChangeWeight(set.key, e)}
                     placeholder="Weight (lb)" />
             </Col>
+            <Button color="danger" onClick={() => this.onDeleteSet(set.key)}><FontAwesomeIcon icon="trash-alt" /></Button>
             </FormGroup>
             );
         })
     }
 
-    // TODO delete set
     render() {
         return (
             <div className={this.props.className}>
