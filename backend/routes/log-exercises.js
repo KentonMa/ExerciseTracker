@@ -15,12 +15,12 @@ router.route('/')
     })
     // Create a log exercise
     .post((req, res) => {
-        const { log_id, exercise_id, sets } = req.body;
+        const { log_id, exercise, sets } = req.body;
         const user_id = req.user.id;
 
         const newLogExercise = new LogExercise({
             log_id,
-            exercise_id,
+            exercise,
             user_id,
             sets
         });

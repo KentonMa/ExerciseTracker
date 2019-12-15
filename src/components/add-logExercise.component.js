@@ -21,7 +21,7 @@ class AddLogExercise extends Component {
         this.state = {
             modal: false,
             exercises: [],
-            exercise: '',
+            exercise: {},
             sets: [
                 {
                     key: new Date().getTime(),
@@ -45,7 +45,7 @@ class AddLogExercise extends Component {
             .then(res => {
                 this.setState({
                     exercises: res.data,
-                    exercise: res.data[0]._id
+                    exercise: res.data[0]
                 });
             })
             .catch(err => console.log(err));
@@ -57,22 +57,15 @@ class AddLogExercise extends Component {
         }));
     }
 
-    // TODO link form data to state
+    // TODO reset state when exercise added
+    // TODO fix blank exercise name on save
     onCreate() {
-        const exercise = {}; // TODO
-        const log_id = this.props.match.params.id;
+        const exercise = {};
         
-        exercise.log_id = log_id;
-        // exercise.user_id = 
-        exercise.exercise = this.state.exercise;
+        exercise.log_id = this.props.logId;
+        exercise.user_id = this.props.user._id;
+        exercise.exercise = this.state.exercise._id;
         exercise.sets = this.state.sets;
-        // log_id: { type: ObjectId },
-        // user_id: { type: ObjectId },
-        // exercise: { type: ObjectId },
-        // sets: [{
-        //     reps: { type: Number },
-        //     weight: { type: Number }
-        // }]
         this.props.addLogExercise(exercise);
 
         // Close modal
@@ -93,7 +86,7 @@ class AddLogExercise extends Component {
 
     onChangeExercise(e) {
         this.setState({
-            exercise: e.target.value
+            exercise: this.state.exercises.find(ex => ex._id === e.target.value)
         });
     }
 
@@ -153,7 +146,7 @@ class AddLogExercise extends Component {
                                     type="select"
                                     name="exerciseSelect"
                                     id="exerciseSelect"
-                                    value={this.state.exercise}
+                                    value={this.state.exercise._id}
                                     onChange={this.onChangeExercise}>
                                 {
                                     this.state.exercises.map(exercise => {
@@ -177,7 +170,11 @@ class AddLogExercise extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    user: state.auth.user
+});
+
 export default connect(
-    null,
+    mapStateToProps,
     { addLogExercise }
 )(AddLogExercise);
