@@ -58,7 +58,6 @@ class AddLogExercise extends Component {
     }
 
     // TODO reset state when exercise added
-    // TODO fix blank exercise name on save
     onCreate() {
         const exercise = {};
         

@@ -27,7 +27,10 @@ router.route('/')
 
         newLogExercise.save()
             .then(exercise => {
-                res.status(201).json(exercise);
+                exercise.populate('exercise', (err, populatedExercise) => {
+                    if (err) res.status(400).json(err);
+                    res.status(201).json(populatedExercise);
+                });
             })
             .catch(err => res.status(400).json(err));
     });
