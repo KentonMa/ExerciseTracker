@@ -57,7 +57,19 @@ class AddLogExercise extends Component {
         }));
     }
 
-    // TODO reset state when exercise added
+    resetState() {
+        this.setState({
+            sets: [
+                {
+                    key: new Date().getTime(),
+                    reps: 0,
+                    weight: 0
+                }
+            ],
+            exercise: this.state.exercises[0]
+        });
+    }
+
     onCreate() {
         const exercise = {};
         
@@ -66,6 +78,7 @@ class AddLogExercise extends Component {
         exercise.exercise = this.state.exercise._id;
         exercise.sets = this.state.sets;
         this.props.addLogExercise(exercise);
+        this.resetState();
 
         // Close modal
         this.toggle();
