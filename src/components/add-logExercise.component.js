@@ -124,21 +124,23 @@ class AddLogExercise extends Component {
         return this.state.sets.map((set) => {
             return (
             <FormGroup key={set.key} row>
-            <Col>
+            <Col sm={5}>
                 <Input
                     type="number"
                     defaultValue={set.reps}
                     onChange={e => this.onChangeReps(set.key, e)}
                     placeholder="Reps" />
             </Col>
-            <Col>
+            <Col sm={5}>
                 <Input
                     type="number"
                     defaultValue={set.weight}
                     onChange={e => this.onChangeWeight(set.key, e)}
                     placeholder="Weight (lb)" />
             </Col>
-            <Button color="danger" onClick={() => this.onDeleteSet(set.key)}><FontAwesomeIcon icon="trash-alt" /></Button>
+            <Col sm={2}>
+                <Button color="danger" onClick={() => this.onDeleteSet(set.key)}><FontAwesomeIcon icon="trash-alt" /></Button>
+            </Col>
             </FormGroup>
             );
         })
